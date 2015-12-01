@@ -53,11 +53,21 @@ public class LoginActivity extends FragmentActivity {
     ArrayAdapter<String> adapter;
     String[] items;
 
+    Thread t;
+    GroupMonitoring m;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.navigation_bar);
+
+        m = new GroupMonitoring();
+
+        t = new Thread(new Runnable() {
+            public void run() {
+                m.Monitor();
+            }
+        });
 
         items = new String[] {"Вход", "Список групп"};
 
@@ -117,6 +127,7 @@ public class LoginActivity extends FragmentActivity {
         if (position == 0 && items[0] == "Вход") {
             VKSdk.login(this, sMyScope);
             items[0] = "Выход";
+            t.start();
             adapter.notifyDataSetChanged();
         }
         else {
